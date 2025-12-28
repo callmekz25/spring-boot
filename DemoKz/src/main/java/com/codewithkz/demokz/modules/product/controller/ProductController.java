@@ -2,12 +2,12 @@ package com.codewithkz.demokz.modules.product.controller;
 
 
 import com.codewithkz.demokz.common.response.ApiResponse;
+import com.codewithkz.demokz.modules.product.dto.CreateProductDto;
 import com.codewithkz.demokz.modules.product.dto.ProductDto;
 import com.codewithkz.demokz.modules.product.service.ProductService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -26,5 +26,20 @@ public class ProductController {
         List<ProductDto> products = productService.GetProducts();
 
         return ResponseEntity.ok(ApiResponse.success(products));
+    }
+
+    @GetMapping("{id}")
+    public ResponseEntity<ApiResponse<ProductDto>> GetProduct(@PathVariable Long id) {
+        ProductDto product = productService.GetProduct(id);
+
+
+        return ResponseEntity.ok(ApiResponse.success(product));
+    }
+
+    @PostMapping
+    public ResponseEntity<ApiResponse<ProductDto>> CreateProduct(@RequestBody CreateProductDto dto) {
+        ProductDto product = productService.CreateProduct(dto);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(product));
     }
 }

@@ -28,6 +28,10 @@ public class UserService {
         return userRepository.findByEmail(email).isPresent();
     }
 
+    public User GetById(Long id) {
+        return userRepository.findById(id).orElse(null);
+    }
+
 
     public List<UserDto> GetUsers() {
         List<User> users = userRepository.findAll();
