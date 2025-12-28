@@ -1,0 +1,8 @@
+package com.codewithkz.demokz.common.exception;
+
+public class DuplicateException extends BaseException {
+
+    public DuplicateException(String message) {
+        super(message);
+    }
+}
