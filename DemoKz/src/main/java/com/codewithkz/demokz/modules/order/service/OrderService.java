@@ -13,7 +13,7 @@ import com.codewithkz.demokz.modules.product.entity.Product;
 import com.codewithkz.demokz.modules.product.service.ProductService;
 import com.codewithkz.demokz.modules.user.entity.User;
 import com.codewithkz.demokz.modules.user.service.UserService;
-import jakarta.persistence.OptimisticLockException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,8 +22,8 @@ import java.util.List;
 
 
 @Service
-
-public class OrderService {
+@Slf4j
+public class OrderService implements IOrderService {
     private final OrderRepository orderRepository;
     private final OrderMapper orderMapper;
     private final ProductService productService;
@@ -54,9 +54,6 @@ public class OrderService {
 
         User user = userService.GetById(dto.getUserId());
 
-        if(user == null) {
-            throw new NotFoundException("User not found");
-        }
         order.setUser(user);
         orderRepository.save(order);
 
@@ -71,6 +68,8 @@ public class OrderService {
             Product product = productService.GetById(i.getId());
 
             if (product == null) {
+                log.warn("Product not found, productId={}", i.getId());
+
                 throw new NotFoundException("Product not found");
             }
 
@@ -78,7 +77,8 @@ public class OrderService {
             int unitPrice = product.getPrice();
 
             if(product.getQuantity() < quantity) {
-                throw new BadRequestException("Quantity is not enough");
+                log.warn("Stock not enough");
+                throw new BadRequestException("Stock is not enough");
             }
 
             OrderItem item = new OrderItem();
@@ -100,6 +100,7 @@ public class OrderService {
         order.setTotalPrice(totalPrice);
 
         orderRepository.save(order);
+        log.info("Order created {}", order);
 
         return orderMapper.toDto(order);
 

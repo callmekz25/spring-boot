@@ -5,6 +5,7 @@ import com.codewithkz.demokz.common.response.ApiResponse;
 import com.codewithkz.demokz.modules.product.dto.CreateProductDto;
 import com.codewithkz.demokz.modules.product.dto.ProductDto;
 import com.codewithkz.demokz.modules.product.service.ProductService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -37,7 +38,7 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<ApiResponse<ProductDto>> CreateProduct(@RequestBody CreateProductDto dto) {
+    public ResponseEntity<ApiResponse<ProductDto>> CreateProduct(@Valid @RequestBody CreateProductDto dto) {
         ProductDto product = productService.CreateProduct(dto);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(product));
