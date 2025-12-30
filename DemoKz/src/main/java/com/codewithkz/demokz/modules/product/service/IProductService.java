@@ -11,4 +11,5 @@ public interface IProductService {
     Product GetById(Long id);
     ProductDto GetProduct(Long id);
     ProductDto CreateProduct(CreateProductDto dto);
+    List<ProductDto> GetProductsOutOfStock();
 }

@@ -49,4 +49,10 @@ public class ProductService implements IProductService {
         return productMapper.toDto(product);
 
     }
+
+
+    public List<ProductDto> GetProductsOutOfStock() {
+        List<Product> products = productRepository.findProductsOutOfStock();
+        return productMapper.toDtoList(products);
+    }
 }
