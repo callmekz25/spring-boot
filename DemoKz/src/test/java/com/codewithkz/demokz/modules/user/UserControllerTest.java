@@ -36,10 +36,10 @@ public class UserControllerTest {
     private UserService userService;
 
     @Test
-    void GetUsersShouldReturnOk() throws Exception {
-        UserDto user1 = new UserDto(1, "test1", "test1@gmail.com");
-        UserDto user2 = new UserDto(2, "test2", "test2@gmail.com");
-        UserDto user3 = new UserDto(3, "test3", "test3@gmail.com");
+    void shouldReturnOkWhenGetUsers() throws Exception {
+        UserDto user1 = new UserDto(1L, "test1", "test1@gmail.com");
+        UserDto user2 = new UserDto(2L, "test2", "test2@gmail.com");
+        UserDto user3 = new UserDto(3L, "test3", "test3@gmail.com");
 
         List<UserDto> users = List.of(user1, user2, user3);
         Mockito.when(userService.GetUsers()).thenReturn(users);
@@ -55,7 +55,7 @@ public class UserControllerTest {
     }
 
     @Test
-    void CreateUserShouldReturn201() throws Exception {
+    void shouldReturnCreatedWhenCreateUser() throws Exception {
         CreateUserDto dto = new CreateUserDto();
         dto.setEmail("test1@gmail.com");
         dto.setName("test1");
@@ -78,7 +78,7 @@ public class UserControllerTest {
     }
 
     @Test
-    void CreateUserShouldReturn400() throws Exception {
+    void shouldReturn400WhenCreateUser() throws Exception {
         CreateUserDto dto = new CreateUserDto();
         dto.setEmail("test1@gmail.com");
         dto.setPassword("123123");
@@ -99,7 +99,7 @@ public class UserControllerTest {
     }
 
     @Test
-    void CreateUserShouldReturn409() throws Exception {
+    void shouldReturn409WhenCreateUser() throws Exception {
         CreateUserDto dto = new CreateUserDto();
         dto.setEmail("test1@gmail.com");
         dto.setName("test1");

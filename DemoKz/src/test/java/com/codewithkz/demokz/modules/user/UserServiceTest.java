@@ -7,7 +7,9 @@ import com.codewithkz.demokz.modules.user.entity.User;
 import com.codewithkz.demokz.modules.user.mapper.UserMapper;
 import com.codewithkz.demokz.modules.user.repository.UserRepository;
 import com.codewithkz.demokz.modules.user.service.UserService;
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
+
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -15,8 +17,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
@@ -31,19 +33,34 @@ public class UserServiceTest {
     private UserService userService;
 
     @Test
-    void getUsers() {
-        Mockito.when(userRepository.findAll()).thenReturn(new ArrayList<>());
+    void shouldReturnAllUsers() {
+        var users = List.of(
+                new User(1L, "test1", "test1@gmail.com", "123123"),
+                new User(2L, "test2", "test2@gmail.com", "123123"),
+                new User(3L, "test3", "test3@gmail.com", "123123")
+        );
 
-        List<UserDto> users = userService.GetUsers();
+        var usersDto = List.of(
+                new UserDto(1L, "test1", "test1@gmail.com"),
+                new UserDto(2L, "test2", "test2@gmail.com"),
+                new UserDto(3L, "test3", "test3@gmail.com")
+        );
+        Mockito.when(userRepository.findAll()).thenReturn(users);
+        Mockito.when(userMapper.toDtoList(users)).thenReturn(usersDto);
 
-        assertThat(users).isNotNull();
-        assertThat(users).isEmpty();
+        List<UserDto> result = userService.GetUsers();
+
+        assertNotNull(result);
+        assertEquals(3, result.size());
+        assertEquals(1L, result.getFirst().getId());
+        assertEquals("test1@gmail.com", result.getFirst().getEmail());
 
         Mockito.verify(userRepository).findAll();
+        Mockito.verify(userMapper).toDtoList(Mockito.any());
     }
 
     @Test
-    void createUser() {
+    void shouldCreateUser() {
 
         CreateUserDto entity = new CreateUserDto();
         entity.setEmail("test@gmail.com");
@@ -68,13 +85,42 @@ public class UserServiceTest {
         UserDto result = userService.CreateUser(entity);
 
 
-        assertThat(result).isNotNull();
-        assertThat(result.getEmail()).isEqualTo(entity.getEmail());
+        assertNotNull(result);
+        assertEquals(entity.getEmail(), result.getEmail());
 
 
         Mockito.verify(userMapper).toEntity(entity);
         Mockito.verify(userMapper).toDto(user);
         Mockito.verify(userRepository).save(user);
+    }
+
+    @Test
+    void shouldThrowDuplicateExceptionWhenCreateUser() {
+
+        CreateUserDto entity = new CreateUserDto();
+        entity.setEmail("test@gmail.com");
+        entity.setName("test");
+        entity.setPassword("123123");
+
+        Mockito.when(userRepository.findByEmail(entity.getEmail()))
+                .thenReturn(Optional.of(new User()));
+
+        RuntimeException exception = assertThrows(
+                RuntimeException.class,
+                () -> userService.CreateUser(entity)
+        );
+
+
+        Mockito.verify(userRepository).findByEmail(entity.getEmail());
+
+        assertEquals("Email already exists", exception.getMessage());
+
+
+        Mockito.verify(userRepository).findByEmail(entity.getEmail());
+        Mockito.verify(userRepository, Mockito.never()).save(Mockito.any());
+        Mockito.verify(userMapper, Mockito.never()).toEntity(Mockito.any());
+        Mockito.verify(userMapper, Mockito.never()).toDto(Mockito.any());
+
     }
 
 
