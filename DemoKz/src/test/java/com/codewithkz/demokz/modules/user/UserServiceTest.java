@@ -1,8 +1,9 @@
 package com.codewithkz.demokz.modules.user;
 
 
-import com.codewithkz.demokz.modules.user.dto.CreateUserDto;
+import com.codewithkz.demokz.modules.auth.dto.RegisterDto;
 import com.codewithkz.demokz.modules.user.dto.UserDto;
+import com.codewithkz.demokz.modules.user.entity.Roles;
 import com.codewithkz.demokz.modules.user.entity.User;
 import com.codewithkz.demokz.modules.user.mapper.UserMapper;
 import com.codewithkz.demokz.modules.user.repository.UserRepository;
@@ -35,9 +36,9 @@ public class UserServiceTest {
     @Test
     void shouldReturnAllUsers() {
         var users = List.of(
-                new User(1L, "test1", "test1@gmail.com", "123123"),
-                new User(2L, "test2", "test2@gmail.com", "123123"),
-                new User(3L, "test3", "test3@gmail.com", "123123")
+                new User(1L, "test1", "test1@gmail.com", "123123", Roles.ROLE_USER),
+                new User(2L, "test2", "test2@gmail.com", "123123", Roles.ROLE_USER),
+                new User(3L, "test3", "test3@gmail.com", "123123", Roles.ROLE_USER)
         );
 
         var usersDto = List.of(
@@ -62,7 +63,7 @@ public class UserServiceTest {
     @Test
     void shouldCreateUser() {
 
-        CreateUserDto entity = new CreateUserDto();
+        RegisterDto entity = new RegisterDto();
         entity.setEmail("test@gmail.com");
         entity.setName("test");
         entity.setPassword("123123");
@@ -97,7 +98,7 @@ public class UserServiceTest {
     @Test
     void shouldThrowDuplicateExceptionWhenCreateUser() {
 
-        CreateUserDto entity = new CreateUserDto();
+        RegisterDto entity = new RegisterDto();
         entity.setEmail("test@gmail.com");
         entity.setName("test");
         entity.setPassword("123123");

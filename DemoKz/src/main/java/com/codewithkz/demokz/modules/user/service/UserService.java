@@ -3,13 +3,14 @@ package com.codewithkz.demokz.modules.user.service;
 
 import com.codewithkz.demokz.common.exception.DuplicateException;
 import com.codewithkz.demokz.common.exception.NotFoundException;
-import com.codewithkz.demokz.modules.user.dto.CreateUserDto;
+import com.codewithkz.demokz.modules.auth.dto.RegisterDto;
 import com.codewithkz.demokz.modules.user.dto.UserDto;
 import com.codewithkz.demokz.modules.user.entity.User;
 import com.codewithkz.demokz.modules.user.mapper.UserMapper;
 import com.codewithkz.demokz.modules.user.repository.UserRepository;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -40,25 +41,12 @@ public class UserService implements IUserService {
     }
 
 
+    @PreAuthorize("hasRole('ADMIN')")
     public List<UserDto> GetUsers() {
         List<User> users = userRepository.findAll();
         return userMapper.toDtoList(users);
     }
 
-    public UserDto CreateUser(CreateUserDto dto) {
-
-        boolean existedEmail = ExistedEmail(dto.getEmail());
-
-        if(existedEmail) {
-            log.warn("Email {} already exists", dto.getEmail());
-            throw new DuplicateException("Email already exists");
-        }
-
-        User user = userMapper.toEntity(dto);
-        userRepository.save(user);
-        log.info("Created user {}", user);
-        return userMapper.toDto(user);
-    }
 
 
 }

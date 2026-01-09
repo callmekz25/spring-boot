@@ -1,6 +1,6 @@
 package com.codewithkz.demokz.modules.user.service;
 
-import com.codewithkz.demokz.modules.user.dto.CreateUserDto;
+import com.codewithkz.demokz.modules.auth.dto.RegisterDto;
 import com.codewithkz.demokz.modules.user.dto.UserDto;
 import com.codewithkz.demokz.modules.user.entity.User;
 
@@ -10,5 +10,4 @@ public interface IUserService {
     boolean ExistedEmail(String email);
     User GetById(Long id);
     List<UserDto> GetUsers();
-    UserDto CreateUser(CreateUserDto dto);
 }

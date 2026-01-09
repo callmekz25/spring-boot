@@ -12,6 +12,7 @@ import com.codewithkz.demokz.modules.order.service.OrderService;
 import com.codewithkz.demokz.modules.product.entity.Product;
 import com.codewithkz.demokz.modules.product.service.ProductService;
 import com.codewithkz.demokz.modules.user.dto.UserDto;
+import com.codewithkz.demokz.modules.user.entity.Roles;
 import com.codewithkz.demokz.modules.user.entity.User;
 import com.codewithkz.demokz.modules.user.service.UserService;
 import org.junit.jupiter.api.Test;
@@ -44,7 +45,7 @@ public class OrderServiceTest {
 
 
     public static Order createOrderMock() {
-        User user = new User(1L, "Nguyen Van A", "a@gmail.com", "123");
+        User user = new User(1L, "Nguyen Van A", "a@gmail.com", "123", Roles.ROLE_USER);
 
         Product p1 = new Product(1L, "Chair", 10, 1000, 0L);
         Product p2 = new Product(2L, "Table", 5, 2000, 0L);
@@ -102,7 +103,7 @@ public class OrderServiceTest {
         );
         var dto = new CreateOrderDto(items, 1L);
 
-        User user = new User(1L, "Nguyen Van A", "a@gmail.com", "123");
+        User user = new User(1L, "Nguyen Van A", "a@gmail.com", "123", Roles.ROLE_USER);
 
         var userDto = new UserDto(1L, "Nguyen Van A", "a@g;mail.com");
 

@@ -3,7 +3,7 @@ package com.codewithkz.demokz.modules.user;
 
 import com.codewithkz.demokz.common.exception.DuplicateException;
 import com.codewithkz.demokz.modules.user.controller.UserController;
-import com.codewithkz.demokz.modules.user.dto.CreateUserDto;
+import com.codewithkz.demokz.modules.auth.dto.RegisterDto;
 import com.codewithkz.demokz.modules.user.dto.UserDto;
 import com.codewithkz.demokz.modules.user.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -55,8 +55,8 @@ public class UserControllerTest {
     }
 
     @Test
-    void shouldReturnCreatedWhenCreateUser() throws Exception {
-        CreateUserDto dto = new CreateUserDto();
+    void shouldReturnCreatedWhenRegister() throws Exception {
+        RegisterDto dto = new RegisterDto();
         dto.setEmail("test1@gmail.com");
         dto.setName("test1");
         dto.setPassword("123123");
@@ -65,7 +65,7 @@ public class UserControllerTest {
         user.setEmail("test1@gmail.com");
         user.setName("test1");
 
-        Mockito.when(userService.CreateUser(Mockito.any(CreateUserDto.class))).thenReturn(user);
+        Mockito.when(userService.CreateUser(Mockito.any(RegisterDto.class))).thenReturn(user);
 
         mockMvc.perform(post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -79,7 +79,7 @@ public class UserControllerTest {
 
     @Test
     void shouldReturn400WhenCreateUser() throws Exception {
-        CreateUserDto dto = new CreateUserDto();
+        RegisterDto dto = new RegisterDto();
         dto.setEmail("test1@gmail.com");
         dto.setPassword("123123");
 
@@ -87,7 +87,7 @@ public class UserControllerTest {
         user.setEmail("test1@gmail.com");
         user.setName("test1");
 
-        Mockito.when(userService.CreateUser(Mockito.any(CreateUserDto.class))).thenReturn(user);
+        Mockito.when(userService.CreateUser(Mockito.any(RegisterDto.class))).thenReturn(user);
 
         mockMvc.perform(post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -100,12 +100,12 @@ public class UserControllerTest {
 
     @Test
     void shouldReturn409WhenCreateUser() throws Exception {
-        CreateUserDto dto = new CreateUserDto();
+        RegisterDto dto = new RegisterDto();
         dto.setEmail("test1@gmail.com");
         dto.setName("test1");
         dto.setPassword("123123");
 
-        Mockito.when(userService.CreateUser(Mockito.any(CreateUserDto.class)))
+        Mockito.when(userService.CreateUser(Mockito.any(RegisterDto.class)))
                 .thenThrow(new DuplicateException("Email already exists"));
 
         mockMvc.perform(post("/users")

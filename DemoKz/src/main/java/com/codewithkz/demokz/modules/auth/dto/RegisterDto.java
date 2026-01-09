@@ -1,4 +1,4 @@
-package com.codewithkz.demokz.modules.user.dto;
+package com.codewithkz.demokz.modules.auth.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -8,7 +8,7 @@ import lombok.*;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateUserDto {
+public class RegisterDto {
     @NotBlank(message = "Name must not be empty")
     private String name;
     @NotBlank(message = "Email must not be empty")
