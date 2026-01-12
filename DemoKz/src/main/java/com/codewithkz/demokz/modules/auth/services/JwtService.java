@@ -1,13 +1,13 @@
 package com.codewithkz.demokz.modules.auth.services;
 
+import com.codewithkz.demokz.common.exception.UnauthorizedException;
+import com.codewithkz.demokz.modules.user.dto.UserDto;
 import com.codewithkz.demokz.modules.user.entity.User;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import io.jsonwebtoken.Jwts;
 
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
@@ -35,7 +35,7 @@ public class JwtService {
         return Jwts.builder()
                 .setSubject(user.getId().toString())
                 .claim("email", user.getEmail())
-                .claim("role", user.getRole())
+                .claim("role", user.getRole().name())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + accessTokenExpiration))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
@@ -60,5 +60,21 @@ public class JwtService {
                 .getBody();
 
         return claims;
+    }
+
+    public void validateToken(String token) {
+        try {
+            Jwts.parserBuilder()
+                    .setSigningKey(getSigningKey())
+                    .build()
+                    .parseClaimsJws(token);
+
+        } catch (ExpiredJwtException e) {
+            throw new UnauthorizedException("Token is expired");
+        }
+        catch (JwtException e) {
+            throw new UnauthorizedException("Token is invalid");
+        }
+
     }
 }

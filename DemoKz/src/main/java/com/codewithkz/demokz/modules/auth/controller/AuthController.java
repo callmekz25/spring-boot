@@ -7,6 +7,7 @@ import com.codewithkz.demokz.modules.auth.dto.TokenResponseDto;
 import com.codewithkz.demokz.modules.auth.services.AuthService;
 import com.codewithkz.demokz.modules.user.dto.UserDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,7 +25,7 @@ public class AuthController {
     public ResponseEntity<ApiResponse<UserDto>> register(@RequestBody RegisterDto dto) {
         var result = authService.register(dto);
 
-        return ResponseEntity.ok(ApiResponse.success(result));
+        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(result));
     }
 
     @PostMapping("login")
